@@ -48,9 +48,6 @@ class GameScene extends Phaser.Scene {
   private wsClient?: WebSocket;
   private id = uuid();
   private players: { [key: string]: Phaser.GameObjects.Sprite } = {};
-  private get player(): Phaser.GameObjects.Sprite {
-    return this.players[this.id];
-  }
 
   private leftKey?: Phaser.Input.Keyboard.Key;
   private rightKey?: Phaser.Input.Keyboard.Key;
@@ -150,8 +147,8 @@ class GameScene extends Phaser.Scene {
 
     // Player game object
     this.players[this.id] = this.physics.add.sprite(48, 48, "player", 1);
-    this.physics.add.collider(this.player, layer);
-    this.cameras.main.startFollow(this.player);
+    this.physics.add.collider(this.players[this.id], layer);
+    this.cameras.main.startFollow(this.players[this.id]);
     this.cameras.main.setBounds(
       0,
       0,
@@ -170,9 +167,6 @@ class GameScene extends Phaser.Scene {
     this.downKey = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.DOWN
     );
-    this.players[this.id] = this.physics.add.sprite(48, 48, "player", 1);
-    this.physics.add.collider(this.players[this.id], layer);
-    this.cameras.main.startFollow(this.players[this.id]);
   }
 
   public update() {
@@ -193,28 +187,24 @@ class GameScene extends Phaser.Scene {
         player.play("left", true);
         moving = true;
       } else if (this.rightKey && this.rightKey.isDown) {
-        (this.player.body as Phaser.Physics.Arcade.Body).setVelocityX(
-          this.VELOCITY
-        );
-        this.player.play("right", true);
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityX(this.VELOCITY);
+        player.play("right", true);
         moving = true;
       } else {
-        (this.player.body as Phaser.Physics.Arcade.Body).setVelocityX(0);
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityX(0);
       }
       if (this.upKey && this.upKey.isDown) {
-        (this.player.body as Phaser.Physics.Arcade.Body).setVelocityY(
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityY(
           -this.VELOCITY
         );
-        this.player.play("up", true);
+        player.play("up", true);
         moving = true;
       } else if (this.downKey && this.downKey.isDown) {
-        (this.player.body as Phaser.Physics.Arcade.Body).setVelocityY(
-          this.VELOCITY
-        );
-        this.player.play("down", true);
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityY(this.VELOCITY);
+        player.play("down", true);
         moving = true;
       } else {
-        (this.player.body as Phaser.Physics.Arcade.Body).setVelocityY(0);
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityY(0);
       }
 
       if (!moving) {

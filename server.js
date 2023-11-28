@@ -46,7 +46,6 @@ function setupWSServer(server) {
         wsClient.send(JSON.stringify(actorCoordinates));
       })
     });
-    ws.send(JSON.stringify(actorCoordinates));
   });
   wss.on("listening", () => {
     const addr = server.address();
